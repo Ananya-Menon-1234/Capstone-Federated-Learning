@@ -9,20 +9,18 @@ import flwr as fl
 from model2 import Net, train, test
 
 class FlowerClient(fl.client.NumPyClient):
-    """Define a Flower Client."""
 
     def __init__(self, trainloader, valloader,num_classes) -> None:
         super().__init__()
 
-        # the dataloaders that point to the data associated to this client
         self.trainloader = trainloader
         self.valloader = valloader
 
-        # a model that is randomly initialised at first
+       
         self.model = Net(num_classes)
         self.model.load_pretrained_model('model2.pth')
 
-        # figure out if this client has access to GPU support or not
+       
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     def set_parameters(self, parameters):

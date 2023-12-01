@@ -56,19 +56,19 @@ def train(net, trainloader, optimizer, epochs, device: str):
             inputs, labels = data
             optimizer.zero_grad()
 
-            # Generate adversarial examples using FGSM
+           
             adv_inputs = fgsm_attack(net, inputs.to(device), labels.to(device), epsilon=epsilon)
 
-            # Forward pass on clean and adversarial examples
+            
             outputs_clean = net(inputs.to(device))
             outputs_adv = net(adv_inputs)
 
-            # Calculate losses
+           
             loss_clean = criterion(outputs_clean, labels.to(device))
             loss_adv = criterion(outputs_adv, labels.to(device))
             loss = loss_clean + loss_adv
 
-            # Backward and optimize
+           
             loss.backward()
             optimizer.step()
             running_loss += loss.item()
@@ -91,16 +91,16 @@ def test(net, testloader, device: str):
             inputs, labels = inputs.to(device), torch.argmax(one_hot_labels, dim=1).to(device)
             outputs = net(inputs)
 
-            # Calculate the loss using class indices
+           
             loss = criterion(outputs, labels)
             test_loss += loss.item()
 
-            # Convert outputs to class predictions
+          
             predicted_classes = torch.argmax(outputs, dim=1)
             predictions.extend(predicted_classes.cpu().numpy())
             true_labels.extend(labels.cpu().numpy())
 
-    # Calculate metrics
+   
     test_loss /= len(testloader)
     accuracy = accuracy_score(true_labels, predictions)
     precision = precision_score(true_labels, predictions)
